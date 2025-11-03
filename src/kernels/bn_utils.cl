@@ -116,8 +116,6 @@ void compute_backward_factors(int N,int M,float eps,
     offset += offset_offset; 
     mean += mean_offset;
     varrstd  += varrstd_offset;
-    if(gamma_in)
-        gamma_in += gamma_in_offset;
     dyx_sum += dyx_sum_offset;
     dy_sum  += dy_sum_offset;
 
@@ -129,8 +127,10 @@ void compute_backward_factors(int N,int M,float eps,
         rsqrtsig = 1.0f / sqrt(varrstd[i] + eps);
 
     float gamma=1.0f;
-    if(gamma_in)
+    if(gamma_in) {
+        gamma_in += gamma_in_offset;
         gamma = gamma_in[i];
+    }
     float mu = mean[i];
     float dys = dy_sum[i];
     float dsig = -0.5 * gamma * (dyx_sum[i] - mu * dys) * (rsqrtsig * rsqrtsig * rsqrtsig);
